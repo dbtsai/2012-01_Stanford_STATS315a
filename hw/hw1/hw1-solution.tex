@@ -55,11 +55,34 @@
 \subsection*{(a)}
 
 
-\section*{Problem 2}
-\subsection*{(a)}
+\section*{Problem 2 (ESL 2.4)}
+The squared distance from any sample point to the origin has a $\chi_p^2$ distribution with mean $p$; therefore, since a prediction point $x_0$ is drawn from this distribution, it will have a expected squared distance $p$ from the origin. 
+
+Because $z_i=a^Tx_i$, and $a$ is independent from $x_i$, we can conclude that $z_i \sim N$, normal distribution. Now, let's calculate the expectation value of $z_i$. We know that for a $p$ dimensional vector $a$ 
+\begin{align}
+E(z) = E(a^Tx) = a^TE(x) = 0
+\end{align}
+
+The co-variant can be given by
+\begin{align}
+Cov(a^Tx) = a^Ta = 1
+\end{align}
+As a result, we get $z_i \sim N(0,1)$, and the expected squared distance will be $E(z^2) = 1$.
+
+
 
 \section*{Problem 3}
 \subsection*{(a)}
+
+
+
+\subsection*{(b)}
+
+\subsection*{(c)}
+
+\subsection*{(d)}
+
+
 
 \section*{Problem 4}
 \subsection*{(a)}
@@ -70,7 +93,21 @@
 \section*{Problem 6}
 \subsection*{(a)}
 
+\subsection*{(b)}
+In the ridge regression approach, the equation we are trying to solve is 
+\begin{align}
+(X^TX +  \lambda I)\beta = X^T y
+\end{align}
+The solution can be given by $\hat{\beta}_{\lambda}=(X^TX +  \lambda I)^{-1}X^T y$.  We add positive constant to diagonal of $X^TX$; therefore, $(X^TX +  \lambda I)^{-1}$ is non-singular, even if $X^TX$ is not of full rank. As a result, the solution always exists, and is unique.
+\subsection*{(c)}
 
-
+\subsection*{(d)}
+Using $X=UDV^T$
+\begin{align}
+\hat{\beta}_{\lambda}&=(X^TX +  \lambda I)^{-1}X^T y \nonumber\\
+				       &=\left( VD^TU^TUDV^T  + \lambda I \right)VDU^T y \nonumber\\
+                                      &=V\left(D^2 + \lambda I \right)V^TDU^T y \nonumber\\
+                                      &=V\left(D^2 + \lambda I \right)DU^T y
+\end{align}
 \end{document}
 
