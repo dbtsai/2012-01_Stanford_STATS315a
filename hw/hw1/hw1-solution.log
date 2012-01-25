@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.12.22)  24 JAN 2012 01:59
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.11.25)  25 JAN 2012 14:16
 entering extended mode
  %&-line parsing enabled.
 **hw1-solution.tex
@@ -199,7 +199,11 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 LaTeX Warning: Unused global option(s):
     [column].
 
-(./hw1-solution.aux)
+(./hw1-solution.aux
+
+LaTeX Warning: Label `4inequal' multiply defined.
+
+)
 \openout1 = `hw1-solution.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
@@ -238,31 +242,58 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 51.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] (./hw1-solution.au
-x) ) 
+) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (1.02277pt too wide) in paragraph at lines 145--145
+[] 
+ []
+
+[2] [3] [4]
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q5.pdf): PDF inclusion: found PDF ver
+sion <1.5>, but at most version <1.4> allowed
+<Q5.pdf, id=33, 384.54668pt x 303.42357pt>
+File: Q5.pdf Graphic file (type pdf)
+ <use Q5.pdf> [5 <./Q5.pdf>]
+Overfull \hbox (272.24318pt too wide) in paragraph at lines 266--266
+[]\OT1/cmtt/m/n/10 legend('Training set','Linear least squares fitting','Method
+ 1 Upper bound', 'Method 1 Lower bound', 'Method 2 Upper bound', 'Method 2 Lowe
+r bound');[] 
+ []
+
+[6] [7] (./hw1-solution.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3609 strings out of 495061
- 43520 string characters out of 1182620
- 107613 words of memory out of 3000000
- 6754 multiletter control sequences out of 15000+50000
- 14770 words of font info for 55 fonts, out of 3000000 for 9000
+ 3622 strings out of 495061
+ 43635 string characters out of 1182620
+ 119710 words of memory out of 3000000
+ 6765 multiletter control sequences out of 15000+50000
+ 14938 words of font info for 56 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 33i,9n,27p,298b,287s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/s
-hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texmf-t
-exlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/font
-s/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/pub
-lic/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts
-/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb
-></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/
-texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texmf-texlive
-/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/type
-1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-texlive/fonts/type1/public/ams
-fonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmt
-i9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on hw1-solution.pdf (2 pages, 146016 bytes).
+ 33i,19n,27p,433b,287s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
+re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-te
+xlive/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texmf-texlive/fonts/
+type1/public/amsfonts/cm/cmbx9.pfb></usr/share/texmf-texlive/fonts/type1/public
+/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/c
+m/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi5.pfb
+></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share
+/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type
+1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmr8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.
+pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-t
+exlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts
+/type1/public/amsfonts/cm/cmti9.pfb></usr/share/texmf-texlive/fonts/type1/publi
+c/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
+cm/cmtt8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msam
+10.pfb>
+Output written on hw1-solution.pdf (7 pages, 285318 bytes).
 PDF statistics:
- 65 PDF objects out of 1000 (max. 8388607)
+ 157 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 
