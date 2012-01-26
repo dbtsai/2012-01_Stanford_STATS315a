@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.11.25)  25 JAN 2012 14:16
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2011.12.22)  25 JAN 2012 16:10
 entering extended mode
  %&-line parsing enabled.
 **hw1-solution.tex
@@ -242,37 +242,116 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 51.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-) [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (1.02277pt too wide) in paragraph at lines 145--145
+)
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1a1.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1a1.pdf, id=1, 378.11264pt x 312.48746pt>
+File: Q1a1.pdf Graphic file (type pdf)
+ <use Q1a1.pdf>
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1a2.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1a2.pdf, id=3, 386.13258pt x 312.57779pt>
+File: Q1a2.pdf Graphic file (type pdf)
+ <use Q1a2.pdf>
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1a3.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1a3.pdf, id=5, 386.13258pt x 312.57779pt>
+File: Q1a3.pdf Graphic file (type pdf)
+ <use Q1a3.pdf>
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1a4.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1a4.pdf, id=7, 386.13258pt x 312.57779pt>
+File: Q1a4.pdf Graphic file (type pdf)
+ <use Q1a4.pdf>
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1a5.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1a5.pdf, id=9, 386.13258pt x 312.57779pt>
+File: Q1a5.pdf Graphic file (type pdf)
+ <use Q1a5.pdf> [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Q1a1.p
+df> <./Q1a2.pdf> <./Q1a3.pdf> <./Q1a4.pdf>] [2 <./Q1a5.pdf>]
+Overfull \hbox (104.24464pt too wide) in paragraph at lines 157--157
+[]\OT1/cmtt/m/n/10 [X,Y] = meshgrid(linspace(min_x, max_x),linspace(min_y, max_
+y)); % just to make data in correct format for 'classify'[] 
+ []
+
+
+Overfull \hbox (114.74455pt too wide) in paragraph at lines 157--157
+[]    \OT1/cmtt/m/n/10 contour(linspace(min_x, max_x),linspace(min_y, max_y), r
+eshape(class_knn, 100, 100), 1, 'b', 'linewidth', 2); %plot[] 
+ []
+
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1b1.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1b1.pdf, id=108, 385.78127pt x 305.61177pt>
+File: Q1b1.pdf Graphic file (type pdf)
+ <use Q1b1.pdf> [3] [4 <./Q1b1.pdf>]
+Overfull \hbox (83.24483pt too wide) in paragraph at lines 219--219
+[]\OT1/cmtt/m/n/10 legend('k nearest neighbor test','k nearest neighbor train',
+'lingear regression test','linear regression train');[] 
+ []
+
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1c1.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1c1.pdf, id=171, 392.9313pt x 317.88763pt>
+File: Q1c1.pdf Graphic file (type pdf)
+ <use Q1c1.pdf>
+
+pdfTeX warning: /usr/bin/pdflatex (file ./Q1c2.pdf): PDF inclusion: found PDF v
+ersion <1.5>, but at most version <1.4> allowed
+<Q1c2.pdf, id=173, 391.52272pt x 317.08463pt>
+File: Q1c2.pdf Graphic file (type pdf)
+ <use Q1c2.pdf>
+Overfull \hbox (8.0pt too wide) in paragraph at lines 223--227
+ []$ 
+ []
+
+
+Overfull \hbox (219.74364pt too wide) in paragraph at lines 284--284
+[]    \OT1/cmtt/m/n/10 training_10 = [train_green(int8(0.1*(i-1)*n+1):int8(0.1*
+i*n),:); train_red(int8(0.1*(i-1)*n+1):int8(0.1*i*n),:)]; % the 10% of the data
 [] 
  []
 
-[2] [3] [4]
+[5 <./Q1c1.pdf> <./Q1c2.pdf>] [6] [7]
+Overfull \hbox (1.02277pt too wide) in paragraph at lines 380--380
+[] 
+ []
+
+[8] [9]
 
 pdfTeX warning: /usr/bin/pdflatex (file ./Q5.pdf): PDF inclusion: found PDF ver
 sion <1.5>, but at most version <1.4> allowed
-<Q5.pdf, id=33, 384.54668pt x 303.42357pt>
+<Q5.pdf, id=274, 384.54668pt x 303.42357pt>
 File: Q5.pdf Graphic file (type pdf)
- <use Q5.pdf> [5 <./Q5.pdf>]
-Overfull \hbox (272.24318pt too wide) in paragraph at lines 266--266
+ <use Q5.pdf> [10] [11 <./Q5.pdf>]
+Overfull \hbox (272.24318pt too wide) in paragraph at lines 501--501
 []\OT1/cmtt/m/n/10 legend('Training set','Linear least squares fitting','Method
  1 Upper bound', 'Method 1 Lower bound', 'Method 2 Upper bound', 'Method 2 Lowe
 r bound');[] 
  []
 
-[6] [7] (./hw1-solution.aux)
+[12] (./hw1-solution.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3622 strings out of 495061
- 43635 string characters out of 1182620
- 119710 words of memory out of 3000000
- 6765 multiletter control sequences out of 15000+50000
+ 3664 strings out of 495061
+ 44124 string characters out of 1182620
+ 118711 words of memory out of 3000000
+ 6799 multiletter control sequences out of 15000+50000
  14938 words of font info for 56 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 33i,19n,27p,433b,287s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 33i,19n,27p,470b,287s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/sha
 re/texmf-texlive/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-te
 xlive/fonts/type1/public/amsfonts/cm/cmbx7.pfb></usr/share/texmf-texlive/fonts/
@@ -291,9 +370,9 @@ exlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/fonts
 c/amsfonts/cm/cmtt10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
 cm/cmtt8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/symbols/msam
 10.pfb>
-Output written on hw1-solution.pdf (7 pages, 285318 bytes).
+Output written on hw1-solution.pdf (12 pages, 688489 bytes).
 PDF statistics:
- 157 PDF objects out of 1000 (max. 8388607)
+ 397 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 

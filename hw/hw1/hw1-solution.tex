@@ -54,8 +54,241 @@
 \section*{Problem 1}
 \subsection*{(a)}
 MATLAB is used for this homework instead of R; I already asked professor if we can use MATLAB, and he said it's okay. My teammates are Jin Chen, and Wenqiong Guo. Basically, the code will generate a training sample of size 100 for each class, as well as a test sample of 5,000 per class. Then, we use linear regression and K-nearest neighbour (trained with training sample) to do the classification on test sample.
+
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{Q1a1.pdf} &
+\includegraphics[width=0.4\textwidth]{Q1a2.pdf}
+\end{tabular}
+
+\begin{tabular}{cc}
+\includegraphics[width=0.4\textwidth]{Q1a3.pdf} &
+\includegraphics[width=0.4\textwidth]{Q1a4.pdf}
+\end{tabular}
+\begin{center}
+\includegraphics[width=0.4\textwidth]{Q1a5.pdf} 
+\end{center}
 \begin{verbatim}
+% HW1 Q1
+% Dong-Bang Tsai,Jin Chen, Wenqiong Guo
+% =========================================================================
+clear all;
+
+M = 10;
+mu_green = [0 1]; 
+mu_red = [1 0];
+sigma_green = [1 0; 0 1];
+sigma_red = [1 0; 0 1];
+
+% Generate M centroids from a bivariate Gaussian distribution
+green_centroids = mvnrnd(mu_green,sigma_green, M); % multivariate normal distribution
+red_centroids = mvnrnd(mu_red,sigma_red, M);
+
+% Pick an index at random with probability 1/10, and then generate N(m_k,
+% I/5)
+n = 100; %number of points for each class in training data
+m = 5000; % # of points for each class in test data
+
+% Generate the training data
+train_green = [];
+train_red = [];
+for i = 1:n
+    rand_index_g = randi(M);% randomly pick a centroid
+    rand_index_r = randi(M); 
+    center_green = green_centroids(rand_index_g,:); 
+    center_red = red_centroids(rand_index_r,:);
+    train_green(i,:) = mvnrnd(center_green,sigma_green/5, 1);% multivariate normal dist
+    train_red(i,:) = mvnrnd(center_red,sigma_red/5, 1); 
+end
+
+% Generate the test data
+test_green = [];
+test_red = [];
+for j = 1:m
+    rand_index_g = randi(M);% randomly pick a centroid
+    rand_index_r = randi(M); 
+    center_green = green_centroids(rand_index_g,:); 
+    center_red = red_centroids(rand_index_r,:);
+    test_green(j,:) = mvnrnd(center_green,sigma_green/5, 1);% multivariate normal dist
+    test_red(j,:) = mvnrnd(center_red,sigma_red/5, 1);
+end
+
+% Save the variables
+save Data;
+
+% Plot data points
+figure(1); plot(train_green(:,1), train_green(:,2),'go'); hold on;
+plot(train_red(:,1), train_red(:,2),'ro'); 
+% Linear regression for training data
+min_x = min([train_green(:,1); train_red(:,1)]);
+max_x = max([train_green(:,1); train_red(:,1)]);
+min_y = min([train_green(:,2); train_red(:,2)]);
+max_y = max([train_green(:,2); train_red(:,2)]);
+[X,Y] = meshgrid(linspace(min_x, max_x),linspace(min_y, max_y)); % just to make data in correct format for 'classify'
+X = X(:); Y = Y(:);
+sample = [X Y];
+training = [train_green; train_red];
+group = [ones(n,1); zeros(n,1)];% green = 1, red = 0
+[class,err,POSTERIOR,logp,coeff_linear] = classify(sample, training, group); % linear classifier
+K = coeff_linear(1,2).const;
+L = coeff_linear(1,2).linear; 
+f = @(x,y) K + [x y]*L; % linear function from classifier
+h = ezplot(f,[min_x max_x min_y max_y]);
+title('Linear regression classifier')
+set(h, 'Color', 'm', 'linewidth', 2); xlabel('x'); ylabel('y');
+hold off;
+
+figure(2); plot(test_green(:,1), test_green(:,2),'go'); hold on;
+plot(test_red(:,1), test_red(:,2),'ro'); xlabel('x'); ylabel('y');
+
+hold off;
+
+% Plot KNN classifier for training data
+for i = 1:4
+    k = [1 5 25 151];
+    figure(i+2); plot(train_green(:,1), train_green(:,2),'go'); hold on;
+    plot(train_red(:,1), train_red(:,2),'ro');
+    title(sprintf('%d of Nearest Neighbor Classifier',k(i)));
+    % Knn classifier for training data (lacks error)
+    class_knn = knnclassify(sample, training, group, k(i)); % knn classifier
+    contour(linspace(min_x, max_x),linspace(min_y, max_y), reshape(class_knn, 100, 100), 1, 'b', 'linewidth', 2); %plot
+    axis([min_x max_x min_y max_y]); xlabel('x'); ylabel('y');
+    hold off;
+end
 \end{verbatim}
+
+\subsection*{(b)}
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{Q1b1.pdf} 
+\end{center}
+\caption{Misclassification curves for the training and testing samples using k nearest neighbors method and linear regression method. This figure pretty much matches Figure~2.4 in textbook.}
+\end{figure}
+
+\begin{verbatim}
+% HW1 Q1-b
+% =========================================================================
+clear all;
+load Data;
+
+sample = [test_green; test_red];
+training = [train_green; train_red];
+group = [ones(n,1); zeros(n,1)];
+k = [1 3 5 9 15 25 45 83 151];
+
+% knn error for test data
+knn_error_test = [];
+for i = 1:9
+% knnclassify is a matlab function
+    class_knn_test = knnclassify(sample, training, group, k(i)); 
+% count the number of points that are misclassified
+    num_misclassified = sum(class_knn_test ~= [ones(m,1); zeros(m,1)]);
+% calculate the test error by dividing points misclassified by total points 
+    knn_error_test = [knn_error_test num_misclassified/(2*m)];  
+end
+figure(7); semilogx(200./k, knn_error_test, 'b-o'); hold on;
+
+% knn error for training data
+knn_error_train = [];
+for i = 1:9
+    class_knn_train = knnclassify(training, training, group, k(i));
+    num_misclassified = sum(class_knn_train ~= [ones(n,1); zeros(n,1)]);
+    knn_error_train = [knn_error_train num_misclassified/(2*n)]; 
+end
+semilogx(200./k, knn_error_train, 'g-o'); hold on;
+
+% linear regression error
+% classify is a matlab function for linear regression
+class_linear_test = classify(sample, training, group); 
+class_linear_train = classify(training, training, group);
+% count the number of points that are misclassified
+num_misclassified_test = sum(class_linear_test ~= [ones(m,1); zeros(m,1)]); 
+num_misclassified_train = sum(class_linear_train ~= [ones(n,1); zeros(n,1)]);
+% calculate the test error by dividing points misclassified by total points
+linear_error_test =  num_misclassified_test/(2*m); 
+linear_error_train =  num_misclassified_train/(2*n); 
+% linear regression test data
+semilogx(200./k, linear_error_test*ones(9,1), 'r--');hold on;
+
+% linear regression train data
+semilogx(200./k, linear_error_train*ones(9,1), 'm--');  hold on;
+legend('k nearest neighbor test','k nearest neighbor train','lingear regression test','linear regression train');
+
+xlabel('Degrees of Freedom - N/k'); ylabel('Test Error');
+axis([1 300 0.15 0.25]);
+hold off;
+\end{verbatim}
+
+\subsection*{(c)}
+\begin{center}
+\begin{tabular}{cc}
+\includegraphics[width=0.5\textwidth]{Q1c1.pdf} &
+\includegraphics[width=0.5\textwidth]{Q1c2.pdf}
+\end{tabular}
+\end{center}
+\begin{verbatim}
+% H1 Q1-c
+% =========================================================================
+clear all;
+load Data;
+
+[n, m] = size(train_green);
+training = [train_green; train_red];
+k = [1 3 5 9 15 25 45 83 151]; % k values for knn classification
+
+knn_avg_error = []; % initialize the errors
+linear_avg_error = [];
+for i = 1:10 % loop over each 10% chunk of the data for 10-fold cross validation
+    training_10 = [train_green(int8(0.1*(i-1)*n+1):int8(0.1*i*n),:); train_red(int8(0.1*(i-1)*n+1):int8(0.1*i*n),:)]; % the 10% of the data
+    training_g_90 = train_green;
+    training_r_90 = train_red;
+    training_g_90(int8(0.1*(i-1)*n+1):int8(0.1*i*n),:) = [];
+    training_r_90(int8(0.1*(i-1)*n+1):int8(0.1*i*n),:) = [];
+    training_90 = [training_g_90; training_r_90]; % the rest 90% of the data
+    group = [ones(0.9*n,1); zeros(0.9*n,1)];
+
+    % KNN classification
+    knn_error = [];
+    for i = 1:9
+        class_knn = knnclassify(training_10, training_90, group, k(i));
+        num_misclassified = sum(class_knn ~= [ones(0.1*n,1); zeros(0.1*n,1)]);
+        knn_error = [knn_error num_misclassified/(2*0.1*n)]; 
+    end
+    knn_avg_error = [knn_avg_error; knn_error]; % keep a running vector of all the errors
+    
+    % Linear regression
+    linear_error = [];
+    class_linear = classify(training_10, training_90, group);
+    num_misclassified = sum(class_linear ~= [ones(0.1*n,1); zeros(0.1*n,1)]);
+    linear_error =  num_misclassified/(2*0.1*n); 
+    linear_avg_error = [linear_avg_error linear_error]; % keep a running vector of all the errors
+end
+
+knn_sd = std(knn_avg_error);
+linear_sd = std(linear_avg_error);
+knn_avg_error = mean(knn_avg_error); % average of all the errors for each fold
+linear_avg_error = mean(linear_avg_error); % average of all the errors for each fold
+
+figure(8); semilogx(200./k, knn_avg_error, 'b-o'); hold on;
+plot(200./k, linear_avg_error*ones(9,1), 'r--');
+xlabel('Degrees of Freedom - N/k'); ylabel('Average Errors');
+title('10 fold cross-validation');
+legend('k nearest neighbors','linear regression')
+hold off;
+
+figure(9); semilogx(200./k, knn_sd, 'b-o'); hold on;
+plot(200./k, linear_sd*ones(9,1), 'r--');
+xlabel('Degrees of Freedom - N/k'); ylabel('Standard Errors');
+title('10 fold cross-validation');
+legend('k nearest neighbors','linear regression')
+hold off;
+\end{verbatim}
+
+\subsection*{(d)}
+Since the training data is a mixture of several low-variance Gaussian distributions, with careful chosen $k$, KNN classifier will always give better performance compared with linear regression method; and this property is observed in our simulation. 
+
+As you can see, in KNN method, the error for test sample will start to decrease from $0.255$ to $0.195$ when $N/k=1$ to $10$, and if we try to increase the degrees of freedom, the error will increase for test sample, and it's basically over-fitted to training data; therefore, in this case, the error of predicting training data will be decrease. Ultimately, when $k=1$, the KNN method will give zero for predicting training data.
+
+Since in the real world, most of time, we just have small data set, we don't want to waste the data by splitting them into training data and testing data. Therefore, we can use 10-fold cross-validation to estimate and chose the parameters of the model. In this case, assuming that we only have one training data, we can use 10fold cross-validation to find that the best degrees of freedom is around $N/k=10$, and this is agreed with the result in (a).
 
 \section*{Problem 2 (ESL 2.4)}
 The squared distance from any sample point to the origin has a $\chi_p^2$ distribution with mean $p$; therefore, since a prediction point $x_0$ is drawn from this distribution, it will have a expected squared distance $p$ from the origin. 
@@ -70,6 +303,8 @@ The co-variant can be given by
 Cov(a^Tx) = a^Ta = 1
 \end{align}
 As a result, we get $z_i \sim N(0,1)$, and the expected squared distance will be $E(z^2) = 1$.
+
+\subsection*{(b)}
 
 
 
