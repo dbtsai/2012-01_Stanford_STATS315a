@@ -83,51 +83,27 @@ for i=1:length(Y)
         Y_glmnet(i) = 3;
     end
 end
+Y_test_glmnet = Y_test;
+for i=1:length(Y_test)
+    if Y_test(i) == 3
+      Y_test_glmnet(i) =1;
+    end
+    if Y_test(i) == 5
+        Y_test_glmnet(i) = 2;
+    end
+    if Y_test(i) == 8
+        Y_test_glmnet(i) = 3;
+    end
+end
 
-coeff = glmnet(X, Y_glmnet, 'multinomial', glmnetSet); 
-result = glmnetPredict(coeff, 'class', X); 
+coeff = glmnet(X_filtered, Y_glmnet, 'multinomial', glmnetSet); 
+result = glmnetPredict(coeff, 'class', X_filtered); 
 % The error of training set:
-for i=1:length(coeff.lambda)
-error_glmnet_train(i) = 100*sum(result(:,i)  ...,
-                       ~=Y_glmnet)/length(Y_glmnet);
-end
+error_glmnet_train = 100*sum(result(:,length(coeff.lambda))  ...,
+                       ~=Y_glmnet)/length(Y_glmnet)
 
+result = glmnetPredict(coeff, 'class', X_test_filtered); 
+% The error of testing set
+error_glmnet_train = 100*sum(result(:,length(coeff.lambda))  ...,
+                       ~=Y_test_glmnet)/length(Y_test_glmnet)
 
-
-% The error of testing set:
-error_filtered_test  = 100*sum(classify(X_test_filtered, X_filtered, Y,'linear') ...,
-                       ~=Y_test)/length(Y_test)
-
-training_error_d = [];
-lambda = fit.lambda;
-for i = 1:size(lambda)
-    num_misclassified = sum(predict(:,i) ~= y_train); 
-    [n m] = size(y_train);
-    training_error_d = [training_error_d; num_misclassified/n];
-end
-
-% For the test data
-nrow3 = size(y_test(y_test == 3));
-nrow5 = size(y_test(y_test == 5));
-nrow8 = size(y_test(y_test == 8));
-y = [];
-y(1:nrow3,1) = ones(nrow3,1); % Create a training y in the correct format to feed into glmnet
-y(nrow3+1:nrow3 + nrow5,2) = ones(nrow5,1);
-y(nrow3 + nrow5 +1 : nrow3 + nrow5 + nrow8,3) = ones(nrow8,1);
-
-y_test = [1*ones(nrow3,1); 2*ones(nrow5,1); 3*ones(nrow8,1)]; 
-
-fit = glmnet(x_test_filt, y, 'multinomial', glmnetSet); % glmnet fit
-predict = glmnetPredict(fit, 'class', x_test_filt(1:492,:)); % glmnet predict
-
-test_error_d = [];
-lambda = fit.lambda;
-for i = 1:size(lambda)
-    num_misclassified = sum(predict(:,i) ~= y_test); 
-    [n m] = size(y_test);
-    test_error_d = [test_error_d; num_misclassified/n];
-end
-
-disp('Part (d): end of path');
-disp(['Training Error:' num2str(training_error_d(end))]);
-disp(['Test Error:' num2str(test_error_d(end))]);
