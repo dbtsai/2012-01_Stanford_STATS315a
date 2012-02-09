@@ -69,17 +69,54 @@ error_filtered_test  = 100*sum(classify(X_test_filtered, X_filtered, Y,'linear')
 
 % d)
 
+% Since glmnet can not take Y is not from 1 to n where 1 to n must be
+% contious, I remap it to 1-3 in this case.
+Y_glmnet = Y;
+for i=1:length(Y)
+    if Y(i) == 3
+      Y_glmnet(i) =1;
+    end
+    if Y(i) == 5
+        Y_glmnet(i) = 2;
+    end
+    if Y(i) == 8
+        Y_glmnet(i) = 3;
+    end
+end
 
+result = glmnet(X, Y_glmnet, 'multinomial', glmnetSet); 
+predict = glmnetPredict(fit, 'class', x_train_filt(1:1756,:)); % glmnet predict
 
-% % Plot KNN classifier for training data
-% for i = 1:4
-%     k = [1 5 25 151];
-%     figure(i+2); plot(train_green(:,1), train_green(:,2),'go'); hold on;
-%     plot(train_red(:,1), train_red(:,2),'ro');
-%     title(sprintf('%d of Nearest Neighbor Classifier',k(i)));
-%     % Knn classifier for training data (lacks error)
-%     class_knn = knnclassify(sample, training, group, k(i)); % knn classifier
-%     contour(linspace(min_x, max_x),linspace(min_y, max_y), reshape(class_knn, 100, 100), 1, 'b', 'linewidth', 2); %plot
-%     axis([min_x max_x min_y max_y]); xlabel('x'); ylabel('y');
-%     hold off;
-% end
+training_error_d = [];
+lambda = fit.lambda;
+for i = 1:size(lambda)
+    num_misclassified = sum(predict(:,i) ~= y_train); 
+    [n m] = size(y_train);
+    training_error_d = [training_error_d; num_misclassified/n];
+end
+
+% For the test data
+nrow3 = size(y_test(y_test == 3));
+nrow5 = size(y_test(y_test == 5));
+nrow8 = size(y_test(y_test == 8));
+y = [];
+y(1:nrow3,1) = ones(nrow3,1); % Create a training y in the correct format to feed into glmnet
+y(nrow3+1:nrow3 + nrow5,2) = ones(nrow5,1);
+y(nrow3 + nrow5 +1 : nrow3 + nrow5 + nrow8,3) = ones(nrow8,1);
+
+y_test = [1*ones(nrow3,1); 2*ones(nrow5,1); 3*ones(nrow8,1)]; 
+
+fit = glmnet(x_test_filt, y, 'multinomial', glmnetSet); % glmnet fit
+predict = glmnetPredict(fit, 'class', x_test_filt(1:492,:)); % glmnet predict
+
+test_error_d = [];
+lambda = fit.lambda;
+for i = 1:size(lambda)
+    num_misclassified = sum(predict(:,i) ~= y_test); 
+    [n m] = size(y_test);
+    test_error_d = [test_error_d; num_misclassified/n];
+end
+
+disp('Part (d): end of path');
+disp(['Training Error:' num2str(training_error_d(end))]);
+disp(['Test Error:' num2str(test_error_d(end))]);
