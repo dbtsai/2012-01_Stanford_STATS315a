@@ -84,8 +84,19 @@ for i=1:length(Y)
     end
 end
 
-result = glmnet(X, Y_glmnet, 'multinomial', glmnetSet); 
-predict = glmnetPredict(fit, 'class', x_train_filt(1:1756,:)); % glmnet predict
+coeff = glmnet(X, Y_glmnet, 'multinomial', glmnetSet); 
+result = glmnetPredict(coeff, 'class', X); 
+% The error of training set:
+for i=1:length(coeff.lambda)
+error_glmnet_train(i) = 100*sum(result(:,i)  ...,
+                       ~=Y_glmnet)/length(Y_glmnet);
+end
+
+
+
+% The error of testing set:
+error_filtered_test  = 100*sum(classify(X_test_filtered, X_filtered, Y,'linear') ...,
+                       ~=Y_test)/length(Y_test)
 
 training_error_d = [];
 lambda = fit.lambda;
