@@ -1,0 +1,501 @@
+% ****** Start of file apssamp.tex ******
+%
+%   This file is part of the APS files in the REVTeX 4 distribution.
+%   Version 4.0 of REVTeX, August 2001
+%
+%   Copyright (c) 2001 The American Physical Society.
+%
+%   See the REVTeX 4 README file for restrictions and more information.
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.0
+%
+% See the REVTeX 4 README file
+% It also requires running BibTeX. The commands are as follows:
+%
+%  1)  latex apssamp.tex
+%  2)  bibtex apssampya
+%  3)  latex apssamp.tex
+%  4)  latex apssamp.tex
+%
+\documentclass[pra,groupedaddress,amsmath,amssymb, column]{revtex4}
+
+\setlength{\parindent}{10mm}
+%\documentclass[twocolumn,pra,groupedaddress,amsmath,amssymb]{revtex4}
+%\documentclass[twocolumn,pra,showpacs,groupedaddress,superscriptaddress,amsmath,amssymb]{revtex4}
+%\documentclass[preprint,showpacs,preprintnumbers,amsmath,amssymb]{revtex4}
+
+% Some other (several out of many) possibilities
+%\documentclass[preprint,aps]{revtex4}
+%\documentclass[preprint,aps,draft]{revtex4}
+%\documentclass[pra]{revtex4}% Physical Review B
+
+\usepackage{graphicx}% Include figure files
+\usepackage{braket}
+\usepackage{amsmath}
+\usepackage{bm}% bold math
+\usepackage{subfigure} 
+%\usepackage{dcolumn}% Align table columns on decimal point
+
+
+\begin{document}
+
+\title{Stats 315a: Statistical Learning \\ Problem Set 2}
+\author{Dong-Bang Tsai}
+    \email{dbtsai@stanford.edu}
+\affiliation{Department of Applied Physics, Stanford University, Stanford, California 94305, USA}
+
+
+
+%\date{\today}
+\maketitle
+
+
+\section*{Problem 1 (ESL 3.12 \& 3.30)}
+\subsection*{(ESL 3.12)}
+Let's say original data set is $X=\left( \begin{array}{c}
+	x_1^T\\ \vdots \\ x_n^T
+\end{array} \right)$, and original output is $y$. Now we augment the centered matrix $X$ with additional rows $\sqrt{\lambda}I$, and augment $y$ with $p$ zeros. By doing so, we can get new training data set, $y^\prime=\left( \begin{array}{c}
+	y\\ 0\\ \vdots \\ 0
+\end{array} \right)$, and $X^\prime=\left( \begin{array}{c}
+	x_1^T\\ \vdots \\ x_n^T \\ \sqrt{\lambda}I
+\end{array} \right)$. Let's apply ordinary least squares regression on the augmented data set, and the solution is (in textbook Eq.~(3.3)
+\begin{align}
+\hat{\beta}^\prime &= ({X^\prime}^TX)^{-1}{X^\prime}^Ty^\prime \\
+&=\left(\left( \begin{array}{cccc}
+	x_1& \dots & x_n & \sqrt{\lambda}I
+\end{array} \right)\left( \begin{array}{c}
+	x_1^T\\ \vdots \\ x_n^T \\ \sqrt{\lambda}I
+\end{array} \right)\right)^{-1}\left( \begin{array}{cccc}
+	x_1& \dots & x_n & \sqrt{\lambda}I
+\end{array} \right)\left( \begin{array}{c}
+	y\\ 0\\ \vdots \\ 0
+\end{array} \right) \\
+&= \left( XX^T + {\lambda}I \right)^{-1}Xy
+\end{align} which is the solution of ridge regression in Eq.~(3.44) in textbook. 
+
+\subsection*{(ESL 3.30)}
+Let's say original data set is $X=\left( \begin{array}{c}
+	x_1^T\\ \vdots \\ x_n^T
+\end{array} \right)$, and original output is $y$. Now we augment the $X$ with additional rows $\sqrt{\lambda}I$ and multiply $(1+\lambda)^{-1/2}$, and augment $y$ with $p$ zeros. By doing so, we can get new training data set, $y^\prime=\left( \begin{array}{c}
+	y\\ 0\\ \vdots \\ 0
+\end{array} \right)$, and $X^\prime=(1+\lambda\alpha)^{-1/2}\left( \begin{array}{c}
+	x_1^T\\ \vdots \\ x_n^T \\ \sqrt{\lambda\alpha}I
+\end{array} \right)$, insert this augmented data set into elastic-net optimization problem, also use some tricks from ESL 3.12, using $\gamma = \frac{(1-\alpha)}{\alpha}$, $\phi=(1+\lambda\alpha)^{-1/2}$
+\begin{align}
+&\mathrm{min}_{\beta^\prime}(y^\prime-X^\prime\beta^\prime)^T(y^\prime-X^\prime\beta^\prime) + \lambda( \alpha |\beta^\prime|^2_2 + (1-\alpha)|\beta^\prime|_1 )\\
+&=\mathrm{min}_{\beta^\prime}(y-\phi X\beta^\prime)^T(y-\phi X\beta^\prime) +\frac{(1-\alpha)}{\alpha}\phi|\beta^\prime|_1\\
+&=\mathrm{min}_{\beta^\prime}(y-X\beta)^T(y- X\beta) +\frac{(1-\alpha)}{\alpha}\phi|\beta|_1
+\end{align}
+where $\phi\beta^\prime = \beta$. As a result, a elastic-net optimization problem can turn into a lasso problem with a proper augmented data.
+
+\section*{Problem 2 (ESL 3.23)}
+\subsection*{(a)}
+As we discussed in page 46 in textbook, the orthogonality lemma is given by $<\hat{y}, y-\hat{y}>=0$. With $u(\alpha)=\alpha X\hat{\beta}=\alpha\hat{y}$, 
+\begin{align}
+<x_j, y-u(\alpha)> &= <x_j, y - \alpha \hat y> \\
+&=<x_j, (1-\alpha)y + \alpha_y - \alpha \hat y>\\
+&= (1-\alpha)<x_j, y> + \alpha<x_j, y-\hat y> \\
+&= (1-\alpha)<x_j, y>  
+\end{align}
+therefore, 
+\begin{align}
+\frac{1}{N}|<x_j, y-u(\alpha)>| = \frac{1}{N}(1-\alpha)|<x_j, y>| = (1-\alpha)\lambda
+\end{align}
+As a result, the correlations of each $x_j$ with the residuals remain equal in magnitude as we progress toward $u$.
+\subsection*{(b)}
+The correlations can be given by
+\begin{align}
+C_j(\alpha) &= \frac{\frac{1}{N}|<x_j, y-u(\alpha)>|}{\sqrt{\frac{1}{N}<x_j,x_j>}\sqrt{\frac{1}{N}<y-u(\alpha),y-u(\alpha)>}}\\
+&= \frac{(1-a)\lambda}{\sqrt{\frac{1}{N}<y-u(\alpha),y-u(\alpha)>}}
+\end{align}
+Let's figure out the term in denominator. Using the trick we used before, $ y-u(\alpha)=(1-\alpha)y + \alpha_y - \alpha \hat y$
+\begin{align}
+<y-u(\alpha),y-u(\alpha)> &= < (1-\alpha)y + \alpha_y - \alpha \hat y, (1-\alpha)y + \alpha_y - \alpha \hat y>\\
+&=(1-\alpha)^2<y,y> + 2\alpha(1-\alpha)<y,y-\hat y>+\alpha^2<y-\hat y, y-\hat y>\\
+&=(1-\alpha)^2N +2\alpha <y-\hat y, y-\hat y> +2\alpha <\hat y, y- \hat y> + \alpha^2 RSS\\
+&=(1-\alpha)^2N + 2\alpha<y-\hat y, y-\hat y> +\alpha^2 RSS\\
+&=N\left(  (1-\alpha)^2 + \frac{\alpha}{N}(2 - \alpha) RSS   \right)
+\end{align}
+Therefore, the correlations are
+\begin{align}
+C_j(\alpha) =  \frac{(1-a)\lambda}{\sqrt{  (1-\alpha)^2 + \frac{\alpha}{N}(2 - \alpha) RSS}}
+\end{align}
+which will be decreased monotonically to zero.
+
+\subsection*{(c)}
+The result from part (a) shows that in LAR algorithm, when we move $\beta_j$ from $0$ towards its least-squares coefficient $<x_j, r>$, the correlations remain equal in magnitude; therefore, it keeps the correlations tied. Also, as $\alpha$ increased, the correlation function will be monotonically decreased to zero.
+
+
+
+
+\section*{Problem 3 (ESL 4.2)}
+\subsection*{(a)}
+If the LDA rule classifies to class 2, it implies that $\hat{\delta}_2(x) >\hat{\delta}_1(x)$, where $\hat{\delta}_k(x)$ is defined in Eq.~(4.10) in textbook,
+\begin{align}
+	\delta_k(x) = x^T\Sigma^{-1}\mu_k - \frac{1}{2}\mu_k^T\Sigma^{-1}\mu_k + \log\pi_k
+\end{align}
+where $\pi$, $\mu$, $\Sigma$ are estimated from our training data. Insert the condition in the problem set into this equation, we have
+\begin{align}
+x^T\hat{\Sigma}^{-1}\hat{\mu}_2 - \frac{1}{2}\hat{\mu}_2^T\hat{\Sigma}^{-1}\hat{\mu}_2 + \log \frac{N_2}{N} > 
+x^T\hat{\Sigma}^{-1}\hat{\mu}_1 - \frac{1}{2}\hat{\mu}_1^T\hat{\Sigma}^{-1}\hat{\mu}_1 + \log\frac{N_1}{N}\\
+\therefore\;\;x^T\hat{\Sigma}^{-1}(\hat{\mu}_2-\hat{\mu}_1)>\frac{1}{2}\hat{\mu}_2^T\hat{\Sigma}^{-1}\hat{\mu}_2-\frac{1}{2}\hat{\mu}_1^T\hat{\Sigma}^{-1}\hat{\mu}_1+ \log\frac{N_1}{N} - \log\frac{N_2}{N}
+\end{align}
+The other case will simply change ``$>$'' to ``$<$'' which can be easily proven.
+
+\subsection*{(b)}
+Let's define $X$ is $N\times(p+1)$ matrix, and the extra dimension is from adding the constant variable $1$ in $X$, and $\hat{\Theta}=\left( \begin{array}{c}
+\hat{\beta}_0 \\ \hat{\beta} \end{array} \right)$ will include $\hat{\beta}_0$ which is the intercept. Therefore, the normal equation given in Eq.~(2.5) in textbook will be $X^T(\hat{y}-X\hat{\Theta})=0$.
+
+Let's calculate all the terms in the normal equation, and see if we can simplify the equation.  
+The first term will be
+\begin{align}
+X^T\hat{y}& = \left( \begin{array}{cccc}
+	 1  &1      & \dots &1\\
+	x_1& x_2 & \dots &x_n
+\end{array} \right)
+\left( \begin{array}{c}
+	\hat{y}_1 \\ \vdots\\\hat{y}_n 
+\end{array} \right)=
+\left( \begin{array}{c}
+	\sum \hat{y}_i\\ \sum x_i \hat{y}_i 
+\end{array} \right)=	
+\left( \begin{array}{c}
+	\sum \hat{y}_i\\ \sum x_i \hat{y}_i 
+\end{array} \right)=
+\left( \begin{array}{c}
+	N_1(-\frac{N}{N_1})+N_2\frac{N}{N_2}\\ -\frac{N}{N_1}N_1\hat{\mu}_1+\frac{N}{N_2}N_2\hat{\mu}_2
+\end{array} \right)\\ 
+&= 
+\left( \begin{array}{c}
+	0\\ N(  \hat{\mu}_2-\hat{\mu}_1)
+\end{array} \right)
+\end{align}
+The second term involved in the normal equation will be
+\begin{align}
+X^TX = \left( \begin{array}{ccc}
+	1&\dots&1\\ x_1&\dots&x_n
+\end{array} \right)
+\left( \begin{array}{cc}
+	1 & x_1^T\\
+	\vdots&\vdots\\
+	1 &x_n^T
+\end{array} \right) =
+\left( \begin{array}{cc}
+	N & \sum x_i^T\\
+	\sum x_i & \sum x_i x_i^T
+\end{array} \right)=
+\left( \begin{array}{cc}
+	N & N_1\hat{\mu}_1^T + N_2\hat{\mu}_2^T\\
+	N_1\hat{\mu}_1 + N_2\hat{\mu}_2& \sum x_i x_i^T
+\end{array} \right)
+\end{align}
+where $\sum x_i x_i^T$ is a $p \times p$ matrix.
+The covariance $\hat\Sigma$ is defined in textbook on page 109,
+\begin{align}
+\hat{\Sigma} &= \frac{1}{N-2}\sum_{k=1}^2\sum_{g_i=k} (x_i-\hat\mu_k) (x_i-\hat\mu_k)^T  \\
+&= \frac{1}{N-2}\sum_{k=1}^2\sum_{g_i=k} (x_i-\hat\mu_k) (x_i-\hat\mu_k)^T  \\
+&= \frac{1}{N-2}\sum_{k=1}^2\sum_{g_i=k} x_ix_i^T - x_i\hat{\mu}_k^T - \hat{\mu}_k  x_i^T+ \hat{\mu}_k\hat{\mu}_k^T\\
+ &=\frac{1}{N-2}\left(  N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T - 2\left(N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T\right)+ \sum_{k=1}^2\sum_{g_i=k} x_ix_i^T \right) \\
+ &=\frac{1}{N-2}\left(  -\left(N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T\right)+ \sum_{i=1}^N x_ix_i^T \right) 
+\end{align}
+ therefore, we have
+ \begin{align}
+ \sum_{i=1}^N x_ix_i^T = (N-2)\hat{\Sigma} + \left(N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T\right)
+ \end{align}
+ Now, the normal equation $X^TX\hat\Theta = X^Ty$ can rewritten as 
+\begin{align}
+\left( \begin{array}{cc}
+	N & N_1\hat{\mu}_1^T + N_2\hat{\mu}_2^T\\
+	N_1\hat{\mu}_1 + N_2\hat{\mu}_2& (N-2)\hat{\Sigma} + \left(N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T\right)
+\end{array} \right)\left( \begin{array}{c}
+\hat{\beta}_0 \\ \hat{\beta} \end{array} \right) =
+\left( \begin{array}{c}
+	0\\ N(  \hat{\mu}_2-\hat{\mu}_1)
+\end{array} \right)
+\end{align}
+therefore,
+\begin{align}
+\hat{\beta}_0 = - \left(  \frac{N_1}{N}\hat{\mu}_1^T+\frac{N_2}{N}\hat{\mu}_2^T  \right) \hat\beta
+\end{align}
+and
+\begin{align}
+\left[ -\frac{1}{N}\left( N_1\hat\mu_1 + N_2\hat\mu_2 \right)\left( N_1\hat\mu_1^T + N_2\hat\mu_2^T \right)+(N-2)\hat{\Sigma} + \left(N_1 \hat{\mu}_1\hat{\mu}_1^T+N_2 \hat{\mu}_2\hat{\mu}_2^T\right) \right]\hat\beta = N(\hat\mu_2-\hat\mu_1)\\
+\therefore\;\; \left[(N-2)\hat{\Sigma} + \frac{N_1N_2}{N}(\hat\mu_2-\hat\mu_1)(\hat\mu_2-\hat\mu_1)^T\right]\hat\beta = N(\hat\mu_2-\hat\mu_1)\\
+\therefore\;\; \left[(N-2)\hat{\Sigma} +\frac{N_1N_2}{N}\hat{\Sigma}_B\right]\hat\beta = N(\hat\mu_2-\hat\mu_1)
+\end{align}
+where $\hat{\Sigma}_B= (\hat\mu_2-\hat\mu_1)(\hat\mu_2-\hat\mu_1)^T$
+\subsection*{(c)}
+\begin{align}
+\hat{\Sigma}_B\hat\beta= (\hat\mu_2-\hat\mu_1)(\hat\mu_2-\hat\mu_1)^T \hat\beta=(\hat\mu_2-\hat\mu_1)c
+\end{align}
+where $c = (\hat\mu_2-\hat\mu_1)^T \hat\beta$ is a constant number. Therefore, $\hat{\Sigma}_B\hat\beta$ is in the direction $ (\hat\mu_2-\hat\mu_1)$. Insert this fact into the normal equation, 
+\begin{align}
+(N-2)\hat{\Sigma} \hat\beta = N(\hat\mu_2-\hat\mu_1) - \frac{cN_1N_2}{N} (\hat\mu_2-\hat\mu_1)  
+\end{align}
+therefore 
+\begin{align}
+ \hat\beta \propto \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)   
+\end{align}
+\subsection*{(d)}
+Assume that the relation between new coding and old coding is $y^\prime = ay+b$, the cost function and corresponding coefficients will be
+\begin{align}
+\mathbf{RSS}(\beta^\prime) &= \sum_i (\hat y^\prime -\hat \beta_0^\prime - \hat\beta^{\prime T}x_i )^2\\
+&=\sum_i ( ay + b - \hat\beta_0^\prime - \hat\beta^{\prime T}x_i  )^2 \\
+&= a^2\sum_i ( y + \frac{b-\hat\beta_0^\prime }{a} - \frac{\hat\beta^{\prime T}}{a}x_i  )^2
+\end{align}
+note that the minimization of new cost function should give the same result since they have similar form; therefore, 
+\begin{align}
+\hat\beta_0 = \frac{b}{a}-\hat\beta_0^\prime \\
+\hat\beta = \frac{\hat\beta^\prime}{a}
+\end{align}
+As a result, we can conclude that  $\hat\beta^\prime \propto \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)  $, and  $\hat\Sigma_B\hat\beta^\prime $ is in the direction $(\hat\mu_2 - \hat\mu_1)$.
+
+\subsection*{(e)}
+\begin{align}
+ \hat\beta =\gamma \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)   
+\end{align}
+where $\gamma = \frac{N^2 - cN_1N_2}{N(N-2)}>0$. 
+Therefore, we can construct prediction function
+\begin{align}
+\hat f &= \hat\beta_0 + x^T\hat\beta \\ 
+&= - \left(  \frac{N_1}{N}\hat{\mu}_1^T+\frac{N_2}{N}\hat{\mu}_2^T  \right) \hat\beta + x^T\hat{\beta}\\
+&=\gamma\left[x^T - \left(  \frac{N_1}{N}\hat{\mu}_1^T+\frac{N_2}{N}\hat{\mu}_2^T  \right)\right]  \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)   
+\end{align}
+Consider the following rule, we classify to class $2$ if $\hat y_i>0$; therefore, we can write down
+\begin{align}
+\left[x^T - \left(  \frac{N_1}{N}\hat{\mu}_1^T+\frac{N_2}{N}\hat{\mu}_2^T  \right)\right]  \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)   > 0  \\
+\therefore\;\;   x^T \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1) >  \left(  \frac{N_1}{N}\hat{\mu}_1^T+\frac{N_2}{N}\hat{\mu}_2^T  \right) \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1)   
+\end{align}
+which is not the same as the original LDA rule classifier. However, when $N_1= N_2$, we have
+\begin{align}
+\therefore\;\;   x^T \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1) &>  \left(  \frac{1}{2}\hat{\mu}_1^T+\frac{1}{2}\hat{\mu}_2^T  \right) \hat{\Sigma}^{-1}(\hat\mu_2-\hat\mu_1) \\
+  &= \frac{1}{2}\hat{\mu}_2^T\hat{\Sigma}^{-1}\hat{\mu}_2-\frac{1}{2}\hat{\mu}_1^T \hat{\Sigma}^{-1}\hat{\mu}_1 
+\end{align}
+which is the same as the original LDA classifier.
+
+\section*{Problem 4}
+Suppose that $Z_1=a_1^TX$ and $Z_2=a_2^TX$ are the discriminant variables for the first two discriminant coordinates, $a_1$ and $a_2$. The between-class variance of $Z_i$ is $a_i^TBa_i$, and the within-class variance $a_i^TWa_i$. Those are discussed in textbook on page 114. Note that $B+W=T$, where $T$ is the total covariance matrix of $X$.
+
+According to the textbook on page 116, $a_i$ is an eigenvector of $W^{-1}B$; therefore,
+\begin{align} W^{-1}Ba_2=\lambda_2a_2\end{align}
+which implies
+\begin{align} a_1^TBa_2=\lambda_2a_1^TWa_2\end{align}
+
+As a result, 
+\begin{align}
+a_1^TTa_2&=a_1^T(B+W)a_2 \\
+&=(\lambda_2+1)a_1^TWa_2\\
+&=0
+\end{align}
+where $)a_1^TWa_2=0$ due that  $a_1$ and $a_2$ are orthogonal in $W$ which has been proven in page 116.
+
+So far, we prove that $Z_1$ and $Z_2$ are uncorrelated for population version; however, if we estimate $W$ and $B$ from the sample covariance, the only difference will be a factor. As a result, the conclusion still holds for sample version.
+
+\section*{Problem 5}
+\subsection*{(a)}
+The solution of the ridge regression coefficient vector $\hat{\beta}_\lambda$ is given by Eq.~(3.44) in the textbook,
+\begin{align}
+	\hat{\beta}_\lambda = (X^TX + \lambda I)^{-1}X^Ty
+\end{align}
+Here, we would like to invert $(X^TX + \lambda I)$, and this matrix has dimension of $10,000$ . As we know that the complexities of matrix multiplication	and matrix inversion are all $O(p^3)$ where $n$ is the dimension of matrix. Therefore, the total cost of computation will be the order of $10^{12}$.
+
+\subsection*{(b)}
+Start from
+\begin{align}
+	\hat{\beta}_\lambda = (X^TX + \lambda I)^{-1}X^Ty\\ \therefore	 (X^TX + \lambda I) \hat{\beta}_\lambda = X^Ty\\ 
+	\end{align}
+\begin{align}
+  \therefore \hat{\beta}_\lambda& =\frac{1}{\lambda} (X^Ty  - X^TX \hat{\beta})\\
+	&=\frac{1}{\lambda} X^T(y-X\hat{\beta})\\
+	&=X^T\alpha
+\end{align}
+where $\alpha=\frac{1}{\lambda}(y-X\hat{\beta}) $ 
+
+\subsection*{(c)}
+If we write $X=UDV^T$, the solution will be
+\begin{align}
+	\hat{\beta}_\lambda &= (X^TX + \lambda I)^{-1}X^Ty\\
+	&= (VDU^TUDV^T + \lambda I)^{-1}VDU^Ty\\
+	&=(VD^2V^T + \lambda I)^{-1}VDU^Ty\\
+	&=V(D^2+ \lambda I)^{-1}V^T VDU^Ty\\
+	&=V(D^2+ \lambda I)^{-1}DU^Ty\\
+	&=V\theta
+\end{align}
+where $\theta =(D^2+ \lambda I)^{-1}DU^Ty $
+Since we are going to calculate $(D^2+ \lambda I)^{-1}$ which is diagonal matrix, the inversion of this matrix is very fast, and it's $O(p)$, and not depend on $\lambda$. Calculate $DU^Ty$ is $O(np)$, and multiply $(D^2+ \lambda I)^{-1}D$  and $U^Ty$ is $O(p^2)$; therefore, the complexity of whole calculation will be $O(p^2)$. 
+
+As long as we can compute SVD of $X$, the whole computation will be faster than approach \textrm{(a)}.
+\subsection*{(d)}
+Simply calculate $\hat{y}_0 = x_0\hat{\beta}_\lambda$, where $x_0$ is the new measurement vector.
+
+
+\section*{Problem 6}
+\subsection*{(a)}
+LDA on the original 256 dimensional space using MATLAB classify routine gives the following error.\\
+\\
+Error of training data: 1.5376\%\\
+Error of testing data: 8.3333\%
+
+\subsection*{(b)}
+LDA on the leading $49$ principal components of the features using MATLAB classify routine gives the following error.\\
+\\
+Error of training data: 4.4989\%\\
+Error of testing data: 8.5366\%
+\\
+\\
+It gives the worse result compared with directly performing LDA on the original data. 
+
+\subsection*{(c)}
+LDA on the averaged non-overlapping $2\times 2$ pixel blocks using MATLAB classify routine gives the following error.\\
+\\
+Error of training data: 3.3030\%\\
+Error of testing data: 7.7236\%
+\\
+\\
+It gives better testing error result since the fitting in part (a) will gives a over-fitting result to training set. You can see it by comparing the error of training data. As a result, the filtering will reduce the model complexity which decreases the problem of over-fitting in part (a). 
+
+\subsection*{(d)}
+I downloaded glmnet for matlab from http://www-stat.stanford.edu/~tibs/glmnet-matlab/
+
+The glmnet performed on filtered data from part (c) gives the following error (at the end of the path).\\
+\\
+Error of training data: 1.5376\%\\
+Error of testing data: 8.1301\%
+
+\subsection*{(Analytical analysis)}
+Now, we would like to prove that fitting a linear model with the full set of pixels with the constrain that the coefficients are piecewise constant is equivalent to the filtered data result in part~(c). 
+
+For the unconstrained model, we try to optimize 
+\begin{align}
+f(x)=x^T\beta
+\end{align}
+In order to transits to constrained model, let's define separate $x$ vector into $4$ groups which represents $k-th$ pixel in $2\times 2$ block. For each groups, there are $8 \times 8$ different positions. Therefore, the vector can be rewritten as a tensor with this notation, $x^k_{ij}$ where k denotes which pixels at one position, and {ij} denotes the position ranged from $1$ to $8$. Now the original unconstrained model can be given by
+\begin{align}
+f(x)&=x^T\beta = \sum_k \beta^k x^k\\
+&= \sum_{ij}\sum_k \beta^k_{ij} x^k_{ij}
+\end{align}
+
+Now, consider that the coefficients are constrained to be piecewise constant, ie, $\beta^1=\beta^2=\beta^3=\beta^4$, the model can be rewritten as
+\begin{align}
+f(x) &= \sum_{ij}\sum_k \beta^k_{ij} x^k_{ij}\\
+&=\sum_{ij} \beta^1_{ij}\sum_k x^k_{ij}\\
+&=\sum_{ij} \beta^1_{ij}4 \bar{x}_{ij}\\
+&=\bar{x}^T\bar{\beta}
+\end{align}
+where $\bar{x}$ is the average of original $x$ within the $2 \times 2$ area.  Therefore, constrained model is the same as fitting a filtered data. 
+
+\subsection*{( Source code for part (a) to part (d) )}
+\begin{verbatim}
+% HW2 Q6
+% Dong-Bang Tsai
+% =========================================================================
+clear all;
+
+% Generate training set
+zip_train_raw_3 = dlmread('train.3'); 
+zip_train_raw_5 = dlmread('train.5'); 
+zip_train_raw_8 = dlmread('train.8'); 
+X = [zip_train_raw_3; zip_train_raw_5; zip_train_raw_8];
+Y = [3*ones(size(zip_train_raw_3,1),1); ...,
+     5*ones(size(zip_train_raw_5,1),1); 8*ones(size(zip_train_raw_8,1),1)];
+clear zip_train_raw_3 zip_train_raw_5 zip_train_raw_8;
+
+% Generate testing set
+zip_test_raw = dlmread('zip.test'); 
+zip_test_raw_3 = zip_test_raw( find(zip_test_raw(:,1)==3), 2:257);
+zip_test_raw_5 = zip_test_raw( find(zip_test_raw(:,1)==5), 2:257);
+zip_test_raw_8 = zip_test_raw( find(zip_test_raw(:,1)==8), 2:257);
+X_test = [zip_test_raw_3; zip_test_raw_5; zip_test_raw_8];
+Y_test = [3*ones(size(zip_test_raw_3,1),1); ...,
+     5*ones(size(zip_test_raw_5,1),1); 8*ones(size(zip_test_raw_8,1),1)];
+clear zip_test_raw zip_test_raw_3 zip_test_raw_5 zip_test_raw_8;
+
+
+% a) 
+% The error of training set:
+error_train = 100*sum(classify(X, X, Y,'linear')~=Y)/length(Y)
+% The error of testing set:
+error_test  = 100*sum(classify(X_test, X, Y,'linear')~=Y_test)/length(Y_test)
+
+% b)
+[U,S,V] = svd(X);
+V_leading = V(:,1:49);
+clear U S V;
+X_leading = X*V_leading;
+X_test_leading = X_test*V_leading;
+% The error of training set:
+error_leading_train = 100*sum(classify(X_leading, X_leading, Y,'linear') ...,
+                      ~=Y)/length(Y)
+% The error of testing set:
+error_leading_test  = 100*sum(classify(X_test_leading, X_leading, Y,'linear') ...,
+                        ~=Y_test)/length(Y_test)
+
+% c)
+X_square=reshape(X,length(Y),16,16);
+X_test_square=reshape(X_test,length(Y_test),16,16);
+% Average the non-operlapping 2x2 pixel blocks
+X_square_filtered = zeros(length(Y),8,8);
+X_test_square_flitered = zeros(length(Y_test),8,8);
+for i=1:8
+    for j=1:8
+        X_square_filtered(:,i,j) = (X_square(:,2*i-1,2*j-1) +X_square(:,2*i,2*j-1) ...,
+                                    +X_square(:,2*i-1,2*j) +X_square(:,2*i,2*j))/4;
+        X_test_square_flitered(:,i,j) = (X_test_square(:,2*i-1,2*j-1) ...,
+                           +X_test_square(:,2*i,2*j-1) +X_test_square(:,2*i-1,2*j) ...,
+                           +X_test_square(:,2*i,2*j))/4;
+    end
+end
+X_filtered = reshape(X_square_filtered, length(Y), 64);
+X_test_filtered = reshape(X_test_square_flitered, length(Y_test), 64);
+clear X_square X_test_square X_square_filtered X_test_square_flitered;
+% The error of training set:
+error_filtered_train = 100*sum(classify(X_filtered, X_filtered, Y,'linear') ...,
+                       ~=Y)/length(Y)
+% The error of testing set:
+error_filtered_test  = 100*sum(classify(X_test_filtered, X_filtered, Y,'linear') ...,
+                       ~=Y_test)/length(Y_test)
+
+% d)
+
+% Since glmnet can not take Y is not from 1 to n where 1 to n must be
+% contious, I remap it to 1-3 in this case.
+Y_glmnet = Y;
+for i=1:length(Y)
+    if Y(i) == 3
+      Y_glmnet(i) =1;
+    end
+    if Y(i) == 5
+        Y_glmnet(i) = 2;
+    end
+    if Y(i) == 8
+        Y_glmnet(i) = 3;
+    end
+end
+Y_test_glmnet = Y_test;
+for i=1:length(Y_test)
+    if Y_test(i) == 3
+      Y_test_glmnet(i) =1;
+    end
+    if Y_test(i) == 5
+        Y_test_glmnet(i) = 2;
+    end
+    if Y_test(i) == 8
+        Y_test_glmnet(i) = 3;
+    end
+end
+
+coeff = glmnet(X_filtered, Y_glmnet, 'multinomial', glmnetSet); 
+result = glmnetPredict(coeff, 'class', X_filtered); 
+% The error of training set:
+error_glmnet_train = 100*sum(result(:,length(coeff.lambda))  ...,
+                       ~=Y_glmnet)/length(Y_glmnet)
+
+result = glmnetPredict(coeff, 'class', X_test_filtered); 
+% The error of testing set
+error_glmnet_train = 100*sum(result(:,length(coeff.lambda))  ...,
+                       ~=Y_test_glmnet)/length(Y_test_glmnet)
+\end{verbatim}
+
+\end{document}
+
